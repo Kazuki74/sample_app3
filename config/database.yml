@@ -20,6 +20,7 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+# production 環境（herokuのデプロイ環境）では pg (postgreSQL) を使用するように指定
 production:
   <<: *default
   adapter: postgresql

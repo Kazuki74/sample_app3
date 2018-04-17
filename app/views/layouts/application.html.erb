@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= yield(:title) %> | Ruby on Rails Tutorial Sample App</title>
+  	<!-- full_titleヘルパーを使ったWebサイトのレイアウト -->
+    <title><%= full_title(yield(:title)) %></title>Sample App</title>
     <%= csrf_meta_tags %>
+    <!-- 最後の引数がハッシュの場合、波カッコは省略可能。
+    stylesheet_link_tag 'application', { media: 'all',
+                                     'data-turbolinks-track': 'reload' } -->
     <%= stylesheet_link_tag    'application', media: 'all',
                                'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application',
