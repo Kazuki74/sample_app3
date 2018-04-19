@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '5.1.4'
+#has_secure_passwordを使ってパスワードをハッシュ化するために必要
+gem 'bcrypt',         '3.1.11'
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'
 gem 'uglifier',     '3.2.0'
