@@ -4,4 +4,8 @@ Rails.application.routes.draw do
   get  '/about',   to: 'static_pages#about'
   get  '/contact', to: 'static_pages#contact'
   get  '/signup',  to: 'users#new'
+
+  #ユーザーのURLを生成するための多数の名前付きルートと共に、
+  #RESTfulなUsersリソースで必要となるすべてのアクションが利用できるようになる
+  resources :users
 end
