@@ -1,0 +1,24 @@
+<% provide(:title, "Log in") %>
+<h1>Log in</h1>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<!-- セッションにはSessionモデルというものがなく、そのため@userのようなインスタンス変数に相当するものもない
+		セッションの場合はリソースの名前とそれに対応するURLを具体的に指定する必要がある -->
+		<%= form_for(:session, url: login_path) do |f| %>
+
+		<%= f.label :email %>
+		<%= f.email_field :email, class: 'form-control' %>
+
+		<%= f.label :password %>
+		<%= f.password_field :password, class: 'form-control' %>
+
+
+		<%= f.submit "Log in", class: "btn btn-primary" %>
+
+		<% end %>
+
+		<p>New User?
+			<%= link_to "Sign up now!", signup_path %></p>
+	</div>
+</div>
