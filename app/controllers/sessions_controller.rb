@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   		log_in user
       #[remember me] チェックボックスの送信結果を処理する
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-  		redirect_to user
+  		redirect_back_or user
   	else
   		#レンダリングが終わっているページで特別にフラッシュメッセージを表示。
   		#flashのメッセージとは異なり、flash.nowのメッセージはその後リクエストが発生したときに消滅

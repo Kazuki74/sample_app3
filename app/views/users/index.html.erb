@@ -1,0 +1,14 @@
+<% provide(:title, 'All users') %>
+<h1>All Users</h1>
+
+<%= will_paginate %>
+
+<ul class="users">
+	<% @users.each do |user| %>
+		<!-- Railsは@users をUserオブジェクトのリストであると推測 -->
+		<!-- さらに、ユーザーのコレクションを与えて呼び出すと、Railsは自動的にユーザーのコレクションを列挙し、それぞれのユーザーを_user.html.erbパーシャルで出力 -->
+		<%= render @users %>
+	<% end %>
+</ul>
+
+<%= will_paginate %>
