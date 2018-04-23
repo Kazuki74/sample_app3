@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   #ユーザーのURLを生成するための多数の名前付きルートと共に、
   #RESTfulなUsersリソースで必要となるすべてのアクションが利用できるようになる
   resources :users
+  resources :account_activations, only: [:edit]
 
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
