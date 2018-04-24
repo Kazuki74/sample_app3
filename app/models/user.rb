@@ -1,5 +1,7 @@
 class User < ApplicationRecord
-	attr_accessor :remember_token, :activation_token
+	# ユーザーがマイクロポストを複数所有する (has_many) 関連付け
+	has_many :microposts, dependent: :destroy
+	attr_accessor :remember_token, :activation_token, :reset_token
 	#email属性を小文字に変換してメールアドレスの一意性を保証する
 	#before_save {email.downcase!} でもOK
 	# before_save {self.email = email.downcase}
@@ -62,6 +64,28 @@ class User < ApplicationRecord
 		UserMailer.account_activation(self).deliver.now
 	end
 
+	# パスワード再設定の属性を設定する
+	def create_reset_digest
+		self.reset_token = User.new_token
+		update_attribute(:reset_digest, User.digest(reset_token))
+		update_attribute(:reset_sent_at, Time.zone.now)
+	end
+
+	# パスワード再設定のメールを送信する
+	def send_password_reset_email
+		UserMailer.password_reset(self).deliver_now
+	end
+
+	# パスワード再設定の期限が切れている場合はtrueを返す
+  	def password_reset_expired?
+    	reset_sent_at < 2.hours.ago
+	end
+
+	# 試作feedの定義
+	def feed
+		# 疑問符があることで、SQLクエリに代入する前にidがエスケープされる
+		Micropost.where("user_id = ?", id)
+	end
 
 	private
 	    # メールアドレスをすべて小文字にする

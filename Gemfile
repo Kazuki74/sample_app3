@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 gem 'rails',        '5.1.4'
 #has_secure_passwordを使ってパスワードをハッシュ化するために必要
@@ -7,6 +7,10 @@ gem 'bcrypt',         '3.1.11'
 gem 'faker',          '1.7.3'
 #ページネーション
 gem 'will_paginate',           '3.1.6'
+# 画像アップローダー
+gem 'carrierwave',             '1.2.2'
+# 画像をリサイズ
+gem 'mini_magick',             '4.7.0'
 gem 'bootstrap-will_paginate', '1.0.0'
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'
@@ -33,4 +37,6 @@ end
 
 group :production do
   gem 'pg', '0.20.0'
+  # 本番環境で画像をアップロード
+  gem 'fog', '1.42'
 end

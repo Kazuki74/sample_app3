@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: :destroy
+  before_action :admin_user, only: [:destroy]
 
   def index
     #indexアクション内のallをpaginateメソッドに置き換え
@@ -15,6 +15,7 @@ class UsersController < ApplicationController
   def show
   	#Usersコントローラにリクエストが正常に送信されると、params[:id]の部分はユーザーidの1に置き換わる
   	@user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
@@ -54,26 +55,20 @@ class UsersController < ApplicationController
   #名前、メールアドレス、パスワード、パスワードの確認の属性をそれぞれ許可し、それ以外を許可しない
   #許可された属性リストにadminが含まれていない
   	def user_params
-  		params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  	end
-
-    #ログイン済みユーザーか確認
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "Please log in."
-        redirect_to login_url
-      end
+      params.require(:user).permit(:name, :email, :password,
+                                   :password_confirmation)
     end
 
-    #正しいユーザーか確認
+    # beforeフィルター
+
+    # 正しいユーザーかどうかを確認
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user)
     end
 
-    #管理者化どうか確認
+    # 管理者かどうかを確認
     def admin_user
       redirect_to(root_url) unless current_user.admin?
     end
-  end
+end
