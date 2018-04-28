@@ -1,6 +1,13 @@
 class User < ApplicationRecord
 	# ユーザーがマイクロポストを複数所有する (has_many) 関連付け
 	has_many :microposts, dependent: :destroy
+	has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+	has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+	# active_relationshipsテーブルを中間テーブルに位置づける
+	# :sourceパラメーターを使い、「following配列の元はfollowed idの集合である」ということを明示的にRailsに伝える
+	has_many :following, through: :active_relationships, source: :followed
+	# :followers属性の場合、Railsが「followers」を単数形にして自動的に外部キーfollower_idを探してくれる
+	has_many :followers, through: :passive_relationships
 	attr_accessor :remember_token, :activation_token, :reset_token
 	#email属性を小文字に変換してメールアドレスの一意性を保証する
 	#before_save {email.downcase!} でもOK
@@ -81,10 +88,26 @@ class User < ApplicationRecord
     	reset_sent_at < 2.hours.ago
 	end
 
-	# 試作feedの定義
+	# ユーザーのステータスフィードを返す
 	def feed
-		# 疑問符があることで、SQLクエリに代入する前にidがエスケープされる
-		Micropost.where("user_id = ?", id)
+		following_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
+		# user.followingコレクションに対応するidを得るためには、関連付けの名前の末尾に_idsを付け足す
+	    Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
+	end
+
+	# ユーザーをフォローする
+	def follow(other_user)
+		active_relationships.create(followed_id: other_user.id)
+	end
+
+	# ユーザーをフォロー解除する
+	def unfollow(other_user)
+		active_relationships.find_by(followed_id: other_user.id).destroy
+	end
+
+	# 現在のユーザーがフォローしてたらtrueを返す
+	def following?(other_user)
+		following.include?(other_user)
 	end
 
 	private

@@ -1,4 +1,6 @@
 class Micropost < ApplicationRecord
+	# micropostsテーブルにはuser_id属性があるので、これを辿って対応する所有者 (ユーザー) を特定
+	# Userモデルに繋げる外部キーが、Micropostモデルのuser_id属性
 	belongs_to :user
 	# データベースから要素を取得したときの、デフォルトの順序を指定するメソッド
 	default_scope -> { order(created_at: :desc) }
