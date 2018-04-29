@@ -11,6 +11,8 @@ gem 'will_paginate',           '3.1.6'
 gem 'carrierwave',             '1.2.2'
 # 画像をリサイズ
 gem 'mini_magick',             '4.7.0'
+# いいね数のカウント
+gem 'counter_culture', '~> 1.8'
 gem 'bootstrap-will_paginate', '1.0.0'
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'

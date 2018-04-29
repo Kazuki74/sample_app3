@@ -1,6 +1,7 @@
 class User < ApplicationRecord
 	# ユーザーがマイクロポストを複数所有する (has_many) 関連付け
 	has_many :microposts, dependent: :destroy
+	has_many :likes, dependent: :destroy
 	has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
 	has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
 	# active_relationshipsテーブルを中間テーブルに位置づける
