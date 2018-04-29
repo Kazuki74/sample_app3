@@ -4,12 +4,16 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:destroy]
 
   def index
-    #indexアクション内のallをpaginateメソッドに置き換え
-    @users = if params[:search]
-      User.where(activated: true).paginate(page: params[:page]).where('name LIKE?', "%#{params[:search]}%")
+    # params[:q][:name_cont]にユーザーが指定した検索ワードが含まれる
+    if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
+      @q = User.ransack(search_params, activated_true: true)
+      @title = "Search Result"
     else
-      User.where(activated: true).paginate(page: params[:page])
+      @q = User.ransack(activated_true: true)
+      @title = "All users"
     end
+    # 「モデル名.Ransack(検索条件)」の結果を「result」で取得
+    @users = @q.result.paginate(page: params[:page])
   end
 
   def new
@@ -17,9 +21,15 @@ class UsersController < ApplicationController
   end
 
   def show
-  	#Usersコントローラにリクエストが正常に送信されると、params[:id]の部分はユーザーidの1に置き換わる
-  	@user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
+    redirect_to root_url and return unless @user.activated?
+  	if params[:q].reject { |key, value| value.blank? }.present?
+      @q = current_user.feed.ransack(microposts_search_params)
+      @feed_items = @q.result.paginate(page: params[:page])
+    else
+      @q = Micropost.none.ransack
+      @feed_items = current_user.feed.paginate(page: params[:page])
+    end
+       @url = user_path(@user)
   end
 
   def create
@@ -88,5 +98,8 @@ class UsersController < ApplicationController
     # 管理者かどうかを確認
     def admin_user
       redirect_to(root_url) unless current_user.admin?
+
+    def search_params
+      params.require(:q).permit(:name_cont)
     end
 end

@@ -13,6 +13,8 @@ gem 'carrierwave',             '1.2.2'
 gem 'mini_magick',             '4.7.0'
 # いいね数のカウント
 gem 'counter_culture', '~> 1.8'
+# Rails用の検索機能を実装
+gem 'ransack'
 gem 'bootstrap-will_paginate', '1.0.0'
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'

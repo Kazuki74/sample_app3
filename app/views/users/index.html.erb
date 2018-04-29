@@ -1,20 +1,27 @@
-<% provide(:title, 'All users') %>
-<h1>All Users</h1>
+<% provide(:title, @title) %>
+<h1><%= @title%></h1>
+
+<div class="row">
+	<div class="search_form">
+		<%= render 'users/search_form' %>
+	</div>
+</div>
 
 <%= will_paginate %>
 
-<p>User Search</p>
-<%= form_tag(users_path, method: :get) do %>
-	<%= text_field_tag :search %>
-	<%= submit_tag 'Search', :name => nil %>
+<% unless @users.empty? %>
+	<ul class="users">
+		<% @users.each do |user| %>
+			<!-- Railsは@users をUserオブジェクトのリストであると推測 -->
+			<!-- さらに、ユーザーのコレクションを与えて呼び出すと、Railsは自動的にユーザーのコレクションを列挙し、それぞれのユーザーを_user.html.erbパーシャルで出力 -->
+			<%= render @users %>
+		<% end %>
+	</ul>
+<% else %>
+	<p>
+		Couldn't find any user.<br>
+	    Please check username you are looking for.
+	</p>
 <% end %>
-
-<ul class="users">
-	<% @users.each do |user| %>
-		<!-- Railsは@users をUserオブジェクトのリストであると推測 -->
-		<!-- さらに、ユーザーのコレクションを与えて呼び出すと、Railsは自動的にユーザーのコレクションを列挙し、それぞれのユーザーを_user.html.erbパーシャルで出力 -->
-		<%= render @users %>
-	<% end %>
-</ul>
 
 <%= will_paginate %>
