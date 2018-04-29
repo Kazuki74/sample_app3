@@ -5,7 +5,11 @@ class UsersController < ApplicationController
 
   def index
     #indexアクション内のallをpaginateメソッドに置き換え
-    @users = User.paginate(page: params[:page])
+    @users = if params[:search]
+      User.where(activated: true).paginate(page: params[:page]).where('name LIKE?', "%#{params[:search]}%")
+    else
+      User.where(activated: true).paginate(page: params[:page])
+    end
   end
 
   def new

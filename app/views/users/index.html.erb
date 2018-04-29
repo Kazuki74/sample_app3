@@ -3,6 +3,12 @@
 
 <%= will_paginate %>
 
+<p>User Search</p>
+<%= form_tag(users_path, method: :get) do %>
+	<%= text_field_tag :search %>
+	<%= submit_tag 'Search', :name => nil %>
+<% end %>
+
 <ul class="users">
 	<% @users.each do |user| %>
 		<!-- Railsは@users をUserオブジェクトのリストであると推測 -->
