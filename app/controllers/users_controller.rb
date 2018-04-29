@@ -98,6 +98,7 @@ class UsersController < ApplicationController
     # 管理者かどうかを確認
     def admin_user
       redirect_to(root_url) unless current_user.admin?
+    end
 
     def search_params
       params.require(:q).permit(:name_cont)
