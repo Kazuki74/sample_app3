@@ -21,15 +21,15 @@ class UsersController < ApplicationController
   end
 
   def show
-    redirect_to root_url and return unless @user.activated?
-  	if params[:q].reject { |key, value| value.blank? }.present?
-      @q = current_user.feed.ransack(microposts_search_params)
-      @feed_items = @q.result.paginate(page: params[:page])
+    @user = User.find(params[:id])
+  	if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
+      @q = @user.microposts.ransack(microposts_search_params)
+      @microposts = @q.result.paginate(page: params[:page])
     else
       @q = Micropost.none.ransack
-      @feed_items = current_user.feed.paginate(page: params[:page])
+      @microposts = @user.microposts.paginate(page: params[:page])
     end
-       @url = user_path(@user)
+    @url = user_path(@user)
   end
 
   def create
@@ -83,8 +83,11 @@ class UsersController < ApplicationController
   #名前、メールアドレス、パスワード、パスワードの確認の属性をそれぞれ許可し、それ以外を許可しない
   #許可された属性リストにadminが含まれていない
   	def user_params
-      params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+
+    def search_params
+      params.require(:q).permit(:name_cont)
     end
 
     # beforeフィルター
@@ -100,7 +103,5 @@ class UsersController < ApplicationController
       redirect_to(root_url) unless current_user.admin?
     end
 
-    def search_params
-      params.require(:q).permit(:name_cont)
-    end
+
 end

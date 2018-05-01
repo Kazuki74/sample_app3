@@ -5,9 +5,11 @@ class StaticPagesController < ApplicationController
       if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
         @q = current_user.feed.ransack(microposts_search_params)
         @feed_items = @q.result.paginate(page: params[:page])
+        @feed_title = "Search Result"
       else
         @q = Micropost.none.ransack
         @feed_items = current_user.feed.paginate(page: params[:page])
+        @feed_title = "Micropost Feed"
       end
         @url = root_path
   	end
