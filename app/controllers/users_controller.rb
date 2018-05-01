@@ -22,11 +22,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-<<<<<<< HEAD
-  	if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
-=======
     if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
->>>>>>> reply-function
       @q = @user.microposts.ransack(microposts_search_params)
       @microposts = @q.result.paginate(page: params[:page])
     else
