@@ -93,7 +93,7 @@ class User < ApplicationRecord
 	def feed
 		following_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
 		# user.followingコレクションに対応するidを得るためには、関連付けの名前の末尾に_idsを付け足す
-	    Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
+	    Micropost.including_replies(id).where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
 	end
 
 	# ユーザーをフォローする
